@@ -156,15 +156,7 @@ function HomePage() {
                   onClick={handleGenerate}
                   style={{ background: "var(--gradient-brand)", boxShadow: "var(--shadow-glow)" }}
                 >
-                  {phase.kind === "rendering" ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Generating…
-                    </>
-                  ) : (
-                    <>
-                      <Film className="h-4 w-4" /> Generate video
-                    </>
-                  )}
+                  <Film className="h-4 w-4" /> Generate video
                 </Button>
               )}
             </aside>
