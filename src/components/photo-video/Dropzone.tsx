@@ -31,7 +31,7 @@ function readImageMeta(file: File): Promise<UploadedImage> {
 
 export function Dropzone({ current, onAdd }: Props) {
   const onDrop = useCallback(
-    async (accepted: File[], rejected: { file: File; errors: { code: string }[] }[]) => {
+    async (accepted: File[], rejected: readonly unknown[]) => {
       if (rejected.length > 0) {
         toast.error(`${rejected.length} file(s) rejected. Only JPG, PNG, WEBP are allowed.`);
       }
