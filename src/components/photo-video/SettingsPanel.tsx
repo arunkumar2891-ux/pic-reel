@@ -78,7 +78,7 @@ export function SettingsPanel({ settings, onChange }: Props) {
         >
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            {[0.1, 0.25, 0.5, 1, 2, 3, 5].map((d) => (
+            {[0.02, 0.03, 0.06, 0.1, 0.25, 0.5, 1, 2, 3, 5].map((d) => (
               <SelectItem key={d} value={String(d)}>{d}s per photo</SelectItem>
             ))}
           </SelectContent>
