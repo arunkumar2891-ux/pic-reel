@@ -21,20 +21,22 @@ export function ProgressView({ progress }: Props) {
       className="rounded-2xl border border-border bg-card p-6"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <h3 className="text-base font-semibold text-foreground">Generating your video</h3>
-          <p className="text-sm text-muted-foreground">{progress.message}</p>
+          <p className="text-sm text-muted-foreground">
+            {progress.message}
+            {progress.total ? (
+              <span className="ml-2 font-semibold tabular-nums text-primary">
+                {progress.current}/{progress.total}
+              </span>
+            ) : null}
+          </p>
         </div>
         <span className="text-2xl font-semibold tabular-nums text-foreground">
           {Math.round(progress.percent)}%
         </span>
       </div>
-      {progress.total ? (
-        <p className="mt-2 text-sm font-medium tabular-nums text-primary">
-          {progress.current}/{progress.total} files processed
-        </p>
-      ) : null}
       <Progress value={progress.percent} className="mt-4" />
       <ul className="mt-5 space-y-2">
         {STEPS.map((s, i) => {

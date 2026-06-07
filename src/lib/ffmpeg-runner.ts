@@ -72,6 +72,8 @@ export async function renderVideo(
       current: i + 1,
       total: images.length,
     });
+    // Yield to the event loop so React can flush progress updates.
+    if (i % 5 === 0) await new Promise((r) => setTimeout(r, 0));
   }
 
   // Build concat list with per-image duration.
