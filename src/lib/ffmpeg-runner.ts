@@ -29,6 +29,8 @@ export interface RenderProgress {
   step: "preparing" | "rendering" | "encoding" | "finalizing";
   percent: number;
   message: string;
+  current?: number;
+  total?: number;
 }
 
 export interface RenderResult {
@@ -63,13 +65,13 @@ export async function renderVideo(
     const fname = `img_${String(i).padStart(5, "0")}${ext}`;
     await ffmpeg.writeFile(fname, await fetchFile(images[i].file));
     fileNames.push(fname);
-    if (i % 10 === 0) {
-      onProgress({
-        step: "preparing",
-        percent: 5 + ((i + 1) / images.length) * 30,
-        message: `Preparing images (${i + 1}/${images.length})`,
-      });
-    }
+    onProgress({
+      step: "preparing",
+      percent: 5 + ((i + 1) / images.length) * 30,
+      message: `Preparing images (${i + 1}/${images.length})`,
+      current: i + 1,
+      total: images.length,
+    });
   }
 
   // Build concat list with per-image duration.
