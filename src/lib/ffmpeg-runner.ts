@@ -29,6 +29,8 @@ export interface RenderProgress {
   step: "preparing" | "rendering" | "encoding" | "finalizing";
   percent: number;
   message: string;
+  current?: number;
+  total?: number;
 }
 
 export interface RenderResult {
