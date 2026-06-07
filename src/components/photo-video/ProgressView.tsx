@@ -30,6 +30,11 @@ export function ProgressView({ progress }: Props) {
           {Math.round(progress.percent)}%
         </span>
       </div>
+      {progress.total ? (
+        <p className="mt-2 text-sm font-medium tabular-nums text-primary">
+          {progress.current}/{progress.total} files processed
+        </p>
+      ) : null}
       <Progress value={progress.percent} className="mt-4" />
       <ul className="mt-5 space-y-2">
         {STEPS.map((s, i) => {
