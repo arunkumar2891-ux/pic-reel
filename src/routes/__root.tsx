@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Hyperlapse Creator" },
+      { name: "description", content: "Convert photos into MP4 videos with customizable settings and real-time progress." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Hyperlapse Creator" },
+      { property: "og:description", content: "Convert photos into MP4 videos with customizable settings and real-time progress." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Hyperlapse Creator" },
+      { name: "twitter:description", content: "Convert photos into MP4 videos with customizable settings and real-time progress." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0f1630d8-1880-4eb8-bc87-c277f3f949a2/id-preview-01d6d5c2--28120fa0-e6fd-4aca-a347-f2b8b78b0162.lovable.app-1780815467976.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0f1630d8-1880-4eb8-bc87-c277f3f949a2/id-preview-01d6d5c2--28120fa0-e6fd-4aca-a347-f2b8b78b0162.lovable.app-1780815467976.png" },
     ],
     links: [
       {
