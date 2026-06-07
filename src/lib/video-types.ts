@@ -2,7 +2,7 @@ export type FPS = 24 | 30 | 48 | 60 | 120;
 export type ResolutionKey = "1080p" | "2k" | "4k";
 export type Codec = "h264" | "h265";
 export type QualityPreset = "fast" | "balanced" | "high";
-export type PhotoDuration = 0.5 | 1 | 2 | 3 | 5;
+export type PhotoDuration = 0.1 | 0.25 | 0.5 | 1 | 2 | 3 | 5;
 
 export interface UploadedImage {
   id: string;
