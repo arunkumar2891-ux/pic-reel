@@ -76,6 +76,14 @@ export async function renderVideo(
 ): Promise<RenderResult> {
   if (images.length === 0) throw new Error("No images to render.");
 
+  onProgress({
+    step: "preparing",
+    percent: 1,
+    message: "Loading encoder…",
+    current: 0,
+    total: images.length,
+  });
+
   const ffmpeg = await getFFmpeg();
   ffmpeg.on("progress", ({ progress }) => {
     const pct = Math.max(0, Math.min(1, progress)) * 100;
@@ -86,7 +94,7 @@ export async function renderVideo(
     });
   });
 
-  onProgress({ step: "preparing", percent: 5, message: "Preparing images" });
+  onProgress({ step: "preparing", percent: 5, message: "Uploading files", current: 0, total: images.length });
 
   // Write each image into the FFmpeg virtual filesystem, preserving extension.
   const fileNames: string[] = [];
@@ -98,12 +106,12 @@ export async function renderVideo(
     onProgress({
       step: "preparing",
       percent: 5 + ((i + 1) / images.length) * 30,
-      message: `Preparing images (${i + 1}/${images.length})`,
+      message: "Uploading files",
       current: i + 1,
       total: images.length,
     });
     // Yield to the event loop so React can flush progress updates.
-    if (i % 5 === 0) await new Promise((r) => setTimeout(r, 0));
+    await new Promise((r) => setTimeout(r, 0));
   }
 
   // Build concat list with per-image duration.
