@@ -1,23 +1,53 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import type { UploadedImage, VideoSettings } from "./video-types";
 import { RESOLUTIONS } from "./video-types";
 
 let ffmpegInstance: FFmpeg | null = null;
+let ffmpegLoading: Promise<FFmpeg> | null = null;
 
 const CORE_VERSION = "0.12.10";
-const BASE_URL = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+const CDNS = [
+  `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`,
+  `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`,
+];
+
+async function loadFFmpeg(onLog?: (msg: string) => void): Promise<FFmpeg> {
+  const ffmpeg = new FFmpeg();
+  if (onLog) ffmpeg.on("log", ({ message }) => onLog(message));
+  let lastErr: unknown;
+  for (const base of CDNS) {
+    try {
+      const [coreURL, wasmURL] = await Promise.all([
+        toBlobURL(`${base}/ffmpeg-core.js`, "text/javascript"),
+        toBlobURL(`${base}/ffmpeg-core.wasm`, "application/wasm"),
+      ]);
+      await ffmpeg.load({ coreURL, wasmURL });
+      return ffmpeg;
+    } catch (e) {
+      lastErr = e;
+      console.warn(`FFmpeg load failed from ${base}`, e);
+    }
+  }
+  throw new Error(
+    `Failed to load FFmpeg encoder from CDN. ${lastErr instanceof Error ? lastErr.message : ""}`,
+  );
+}
 
 export async function getFFmpeg(onLog?: (msg: string) => void): Promise<FFmpeg> {
   if (ffmpegInstance) return ffmpegInstance;
-  const ffmpeg = new FFmpeg();
-  if (onLog) ffmpeg.on("log", ({ message }) => onLog(message));
-  await ffmpeg.load({
-    coreURL: `${BASE_URL}/ffmpeg-core.js`,
-    wasmURL: `${BASE_URL}/ffmpeg-core.wasm`,
-  });
-  ffmpegInstance = ffmpeg;
-  return ffmpeg;
+  if (!ffmpegLoading) {
+    ffmpegLoading = loadFFmpeg(onLog)
+      .then((f) => {
+        ffmpegInstance = f;
+        return f;
+      })
+      .catch((e) => {
+        ffmpegLoading = null;
+        throw e;
+      });
+  }
+  return ffmpegLoading;
 }
 
 function extOf(name: string): string {
