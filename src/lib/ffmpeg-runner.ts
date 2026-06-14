@@ -5,17 +5,49 @@ import { RESOLUTIONS } from "./video-types";
 
 let ffmpegInstance: FFmpeg | null = null;
 let ffmpegLoading: Promise<FFmpeg> | null = null;
+let localWasmURL: string | null = null;
 
 const CORE_VERSION = "0.12.10";
+const LOCAL_CORE_URL = "/ffmpeg/ffmpeg-core.js";
+const LOCAL_WASM_PARTS = [
+  "/ffmpeg/ffmpeg-core.wasm.part0",
+  "/ffmpeg/ffmpeg-core.wasm.part1",
+  "/ffmpeg/ffmpeg-core.wasm.part2",
+  "/ffmpeg/ffmpeg-core.wasm.part3",
+];
 const CDNS = [
   `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`,
   `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`,
 ];
 
+async function getLocalWasmURL(): Promise<string> {
+  if (localWasmURL) return localWasmURL;
+  const buffers = await Promise.all(
+    LOCAL_WASM_PARTS.map(async (part) => {
+      const response = await fetch(part);
+      if (!response.ok) throw new Error(`Failed to load ${part}: ${response.status}`);
+      return response.arrayBuffer();
+    }),
+  );
+  localWasmURL = URL.createObjectURL(new Blob(buffers, { type: "application/wasm" }));
+  return localWasmURL;
+}
+
 async function loadFFmpeg(onLog?: (msg: string) => void): Promise<FFmpeg> {
   const ffmpeg = new FFmpeg();
   if (onLog) ffmpeg.on("log", ({ message }) => onLog(message));
   let lastErr: unknown;
+  try {
+    const [coreURL, wasmURL] = await Promise.all([
+      toBlobURL(LOCAL_CORE_URL, "text/javascript"),
+      getLocalWasmURL(),
+    ]);
+    await ffmpeg.load({ coreURL, wasmURL });
+    return ffmpeg;
+  } catch (e) {
+    lastErr = e;
+    console.warn("FFmpeg load failed from local app assets", e);
+  }
   for (const base of CDNS) {
     try {
       const [coreURL, wasmURL] = await Promise.all([
@@ -30,7 +62,7 @@ async function loadFFmpeg(onLog?: (msg: string) => void): Promise<FFmpeg> {
     }
   }
   throw new Error(
-    `Failed to load FFmpeg encoder from CDN. ${lastErr instanceof Error ? lastErr.message : ""}`,
+    `Failed to load FFmpeg encoder. ${lastErr instanceof Error ? lastErr.message : ""}`,
   );
 }
 
