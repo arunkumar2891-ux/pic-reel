@@ -16,12 +16,12 @@ import { renderVideo, type RenderProgress } from "@/lib/ffmpeg-runner";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Photo to Video Creator — Turn photos into MP4 videos" },
+      { title: "FrameFlow — your ultimate hyperlapse maker" },
       {
         name: "description",
         content: "Upload, reorder, and render photo sequences into MP4 videos. Choose FPS, resolution, codec, and per-photo duration. Runs entirely in your browser.",
       },
-      { property: "og:title", content: "Photo to Video Creator" },
+      { property: "og:title", content: "FrameFlow — your ultimate hyperlapse maker" },
       { property: "og:description", content: "Turn photo sequences into MP4 videos — fully in-browser." },
     ],
   }),
@@ -101,7 +101,7 @@ function HomePage() {
               <Film className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-base font-semibold leading-tight text-foreground">Photo to Video Creator</h1>
+              <h1 className="text-base font-semibold leading-tight text-foreground">FrameFlow</h1>
               <p className="text-xs text-muted-foreground">Render MP4s from photo sequences — 100% in your browser.</p>
             </div>
           </div>
