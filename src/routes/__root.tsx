@@ -87,10 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@frameflow" },
       { name: "twitter:title", content: "FrameFlow — your ultimate hyperlapse maker" },
       { name: "twitter:description", content: "Turn photo sequences into MP4 videos — fully in-browser." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0f1630d8-1880-4eb8-bc87-c277f3f949a2/id-preview-01d6d5c2--28120fa0-e6fd-4aca-a347-f2b8b78b0162.lovable.app-1780815467976.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0f1630d8-1880-4eb8-bc87-c277f3f949a2/id-preview-01d6d5c2--28120fa0-e6fd-4aca-a347-f2b8b78b0162.lovable.app-1780815467976.png" },
+      { property: "og:image", content: "/frameflow-logo.png" },
+      { name: "twitter:image", content: "/frameflow-logo.png" },
     ],
     links: [
+      { rel: "icon", type: "image/png", href: "/favicon-512.png" },
+      { rel: "apple-touch-icon", href: "/favicon-512.png" },
       {
         rel: "stylesheet",
         href: appCss,
