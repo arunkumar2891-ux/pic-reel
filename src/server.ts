@@ -44,7 +44,7 @@ export default {
 
     // Health check — handled before the router so it always resolves,
     // even after a cold start or if the framework router hasn't loaded yet.
-    if (url.pathname === "/api/health" && request.method === "GET") {
+    if (url.pathname === "/api/health" && (request.method === "GET" || request.method === "HEAD")) {
       startKeepAlive(`${url.protocol}//${url.host}`);
       return Response.json({ status: "ok", timestamp: new Date().toISOString() });
     }
