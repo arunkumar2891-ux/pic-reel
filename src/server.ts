@@ -40,8 +40,16 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    // Start the keep-alive pinger on first request (no-op on subsequent calls).
     const url = new URL(request.url);
+
+    // Health check — handled before the router so it always resolves,
+    // even after a cold start or if the framework router hasn't loaded yet.
+    if (url.pathname === "/api/health" && request.method === "GET") {
+      startKeepAlive(`${url.protocol}//${url.host}`);
+      return Response.json({ status: "ok", timestamp: new Date().toISOString() });
+    }
+
+    // Start the keep-alive pinger on first request (no-op on subsequent calls).
     startKeepAlive(`${url.protocol}//${url.host}`);
 
     try {
